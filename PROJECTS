@@ -1,0 +1,12 @@
+This file lists features I would like to see in LIFTLINE.
+
+- Add capability to model asymmetric wing loading.
+- Modify LLT to model swept wings.
+- Modify LLT to model compressibility.
+- Implement Numerical Nonlinear Lifting-Line Method (see Anderson).
+- Add capability to model a rolling wing.
+- Add capability to impose an additional velocity field.
+- Improve user interface; help guide the user through the problem.
+- Build a UI to aid in building a planform geometry (ybp and cbp).
+- Work on documentation.
+- Answer, "Does it make sense to make LIFTLINE a part of AEROPACK?"

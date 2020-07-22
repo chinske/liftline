@@ -1,0 +1,23 @@
+LIFTLINE
+
+Overview
+--------
+
+LIFTLINE is a collection of MATLAB scripts and functions that
+implement lifting-line theory.  It solves the monoplane equation to
+estimate aerodynamic characteristics of a finite wing.  It also
+provides capabilities to analyze shear force and bending moment along
+the wing spar.
+
+Installation
+------------
+
+No specific installation procedures are required.  Simply change the
+current working directory within MATLAB to the top-level directory of
+LIFTLINE.  Alternatively, add the top-level directory of LIFTLINE to
+your MATLAB path.
+
+Documentation
+-------------
+
+See manual.pdf in the directory doc.
