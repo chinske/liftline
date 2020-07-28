@@ -1,5 +1,8 @@
 \documentclass{article}
+\usepackage{graphicx}
 \usepackage{amsmath}
+\usepackage[sorting=none]{biblatex}
+\addbibresource{manual.bib}
 
 \title{LIFTLINE Manual}
 \author{Christopher C. Chinske}
@@ -9,15 +12,37 @@
 \newpage
 \section{Introduction}
 LIFTLINE is a collection of MATLAB scripts and functions that
-implement lifting-line theory.
-\section{Concept of Operations}
-Enter text here.
+implement lifting-line theory.  It solves the monoplane equation to
+estimate aerodynamic characteristics of a finite wing.  It also
+provides capabilities to analyze shear force and bending moment along
+the wing spar.
+\subsection{Theory}
+LIFTLINE implements lifting-line theory as described in \cite{bertin}
+and \cite{anderson}.  The program estimates the spanwise circulation
+of a finite wing.  Following from this result, the program can compute
+the lift and vortex-induced drag coefficients.  The program can also
+estimate structural characteristics, such as shear and bending moment
+along the wing.
+\paragraph{}
+Classical lifting-line theory assumes incompressible flow, no wing
+sweep, and linear airfoil section lift-curve slopes.  Currently,
+LIFTLINE assumes:
+\begin{enumerate}
+\item Incompressible flow
+\item No wing sweep (input required to properly draw planform)
+\item Linear airfoil section lift-curve slopes
+\item Symmetrical loading.
+\end{enumerate}
+Future versions of LIFTLINE will implement a modified lifting-line
+theory and relax these assumptions.
+\subsection{Graphical Workflow}
+\fbox{\includegraphics[width=\textwidth]{images/flowchart.png}}
 \section{Definition of Inputs and Outputs}
 \subsection{Basic Configuration Geometry Inputs}
 N panels compose the semi-span.  For each row of clalp, alpzl, and
 clmax, the inboard value applies immediately outboard of the panel's
 inboard breakpoint.\\*\\*
-\begin{tabular}{|l|l|p{3.5in}|c|}
+\begin{tabular}{|l|l|p{2.5in}|c|}
   % --------------------------------------------------
   \hline
   \textbf{Variable Name} &
@@ -105,7 +130,7 @@ In addition to subsets of the basic configuration geometry inputs, the
 functions MPEGRID, MPESOLVE, and MPERESULT use inputs/outputs as
 defined below.  N is the number of Fourier sine series
 coefficients.\\*\\*
-\begin{tabular}{|l|l|p{3.5in}|c|}
+\begin{tabular}{|l|l|p{2.5in}|c|}
   % --------------------------------------------------
   \hline
   \textbf{Variable Name} &
@@ -210,7 +235,7 @@ coefficients.\\*\\*
 The function SPAREQ (Spar Equilibrium Shear and Bending Moment)
 optionally uses the inputs ploads and uloads, as defined below.  Other
 inputs/outputs are also defined below.\\*\\*
-\begin{tabular}{|l|l|p{3.5in}|c|}
+\begin{tabular}{|l|l|p{2.5in}|c|}
   % --------------------------------------------------
   \hline
   \textbf{Variable Name} &
@@ -266,4 +291,6 @@ inputs/outputs are also defined below.\\*\\*
   \hline
   % --------------------------------------------------  
 \end{tabular}
+\newpage
+\printbibliography
 \end{document}
