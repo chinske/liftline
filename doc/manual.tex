@@ -46,7 +46,8 @@ the user through common analyses.  These analyses are described below.
   \item Find AoA for L = W.  Find the angle of attack that generates
     lift equal to the weight of the aircraft specified in the
     aircraft script.
-  \item  Run Case.  Run MPEGRID, MPESOLVE, and MPERESULT.
+  \item Run Case.  Run MPEGRID, MPESOLVE, and MPERESULT using a
+    specified case script.
   \item AoA Range.  Find CL and CDv over a range of angle of
     attack.
   \item Spar Shear and Bending Moment.  Compute and plot shear and
@@ -54,10 +55,9 @@ the user through common analyses.  These analyses are described below.
 \end{enumerate}
 When building a new aircraft script, it's generally recommended to run
 a grid convergence analysis at a small, positive angle of attack
-(e.g., 4 deg).  Update the run configuration script as necessary.
-Then, if considering an aircraft in steady flight, find the angle of
-attack for L = W.  Again, update the run configuration script as
-necessary.
+(e.g., 4 deg).  Update the case script as necessary.  Then, if
+considering an aircraft in steady flight, find the angle of attack for
+L = W.  Again, update the case script as necessary.
 \section{Definition of Inputs and Outputs}
 \subsection{Basic Configuration Geometry Inputs}
 N panels compose the semi-span.  For each row of clalp, alpzl, and
