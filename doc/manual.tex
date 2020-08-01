@@ -10,6 +10,8 @@
 \begin{document}
 \maketitle
 \newpage
+\tableofcontents
+\newpage
 \section{Introduction}
 LIFTLINE is a collection of MATLAB scripts and functions that
 implement lifting-line theory.  It solves the monoplane equation to
@@ -35,7 +37,19 @@ LIFTLINE assumes:
 \end{enumerate}
 Future versions of LIFTLINE will implement a modified lifting-line
 theory and relax these assumptions.
-\subsection{Graphical Workflow}
+\subsection{Program Organization}
+The top-level directory contains the scripts and functions that make
+up the program.
+\paragraph{}
+The directory scripts\_aircraft contains input scripts that:
+\begin{enumerate}
+\item Define basic configuration geometry inputs
+\item  Define inputs for the function SPAREQ.
+\end{enumerate}
+\paragraph{}
+The directory scripts\_cases contains input scripts that define case
+parameters.
+\subsection{Workflow}
 \fbox{\includegraphics[width=\textwidth]{images/flowchart.png}}
 \subsection{LIFTLINEUI}
 The function LIFTLINEUI provides an interactive interface that guides
@@ -59,6 +73,8 @@ a grid convergence analysis at a small, positive angle of attack
 considering an aircraft in steady flight, find the angle of attack for
 L = W.  Again, update the case script as necessary.
 \section{Definition of Inputs and Outputs}
+\subsection{Planform Geometry}
+\fbox{\includegraphics[width=\textwidth]{images/planform.png}}
 \subsection{Basic Configuration Geometry Inputs}
 N panels compose the semi-span.  For each row of clalp, alpzl, and
 clmax, the inboard value applies immediately outboard of the panel's
@@ -312,6 +328,29 @@ inputs/outputs are also defined below.\\*\\*
   \hline
   % --------------------------------------------------  
 \end{tabular}
+\section{Script and Function Reference}
+\begin{description}
+  
+  \item[drawplan] (Function) Plots the planform.
+
+  \item[liftlineui] (Function) Interactive interface that guides the
+    user through common analyses.
+
+  \item[mpegrid] (Function) Returns vectors of coordinates and section
+    values at N spanwise locations from $0 \leq y \leq b/2$.
+
+  \item[mperesult] (Function) Returns aerodynamic results based on the
+    output of MPESOLVE.    
+
+  \item[mpesolve] (Function) Solves the monoplane equation for
+    symmetrical loading.
+
+  \item[runallmpe] (Script) Runs MPEGRID, MPESOLVE, and MPERESULT.
+
+  \item[spareq] (Function) Returns shear and bending moment for the
+    cantilever wing.
+
+\end{description}
 \newpage
 \printbibliography
 \end{document}
