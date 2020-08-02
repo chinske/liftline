@@ -87,6 +87,7 @@ while run_flag_local == 1 && run_flag_global == 1
         run_flag_global = 0;
     elseif strcmpi(choice,'4')
         % AoA range
+        run_aoa_range(selected_aircraft,selected_runcon)
         run_flag_global = 0;
     elseif strcmpi(choice,'5')
         % spar shear and bending moment
@@ -248,5 +249,47 @@ s.clmax_vec = clmax_vec;
 
 plotflag = [1 1 0 0];
 mpeplot(s,plotflag)
+
+end
+
+% --------------------------------------------------
+function run_aoa_range(selected_aircraft,selected_runcon)
+
+disp('Loading aircraft script...')
+run(selected_aircraft)
+
+disp('Loading run conditions script...')
+run(selected_runcon)
+
+aoa_i = input('Input initial AoA (deg): ');
+aoa_f = input('Input final AoA (deg):   ');
+d_aoa = input('Input increment (deg):   ');
+
+% iterate over AoA range
+i = 1;
+for alpha_r = aoa_i:d_aoa:aoa_f
+    
+    run_all_mpe
+    aoa_values(i) = alpha_r;
+    CL_values(i) = CL;
+    CDv_values(i) = CDv;
+    i = i+1;
+    
+end
+
+% plot results
+figure
+plot(aoa_values,CL_values)
+xlabel('\alpha (deg)')
+ylabel('C_L')
+title('Wing Lift Coefficient')
+grid on
+
+figure
+plot(CDv_values,CL_values)
+xlabel('C_{Dv}')
+ylabel('C_L')
+title('Wing Drag Polar')
+grid on
 
 end
