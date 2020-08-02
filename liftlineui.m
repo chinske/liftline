@@ -79,10 +79,11 @@ while run_flag_local == 1 && run_flag_global == 1
         run_flag_global = 0;
     elseif strcmpi(choice,'2')
         % find AoA for L = W
-        findaoa(selected_aircraft,selected_runcon)
+        find_aoa(selected_aircraft,selected_runcon)
         run_flag_global = 0;
     elseif strcmpi(choice,'3')
         % run case as defined in run conditions script
+        run_case(selected_aircraft,selected_runcon)
         run_flag_global = 0;
     elseif strcmpi(choice,'4')
         % AoA range
@@ -149,7 +150,7 @@ disp(['Required ncoef: ',num2str(ncoef)])
 end
 
 % --------------------------------------------------
-function findaoa(selected_aircraft,selected_runcon)
+function find_aoa(selected_aircraft,selected_runcon)
 % use the secant method to find AoA for L = W
 
 disp('Loading aircraft script...')
@@ -207,5 +208,45 @@ disp(['Input Weight: ',num2str(W)])
 disp(['Computed Lift: ',num2str(L)])
 disp(['Percent Error: ',num2str(100.*abs((L-W)./W))])
 disp(['Iterations: ',num2str(it)])
+
+end
+
+% --------------------------------------------------
+function run_case(selected_aircraft,selected_runcon)
+
+disp('Loading aircraft script...')
+run(selected_aircraft)
+
+disp('Loading run conditions script...')
+run(selected_runcon)
+
+disp('Running case...')
+run_all_mpe
+
+% display results
+disp('--------------------------------------------------')
+disp(' ')
+
+disp(['Wing lift coefficient: ',num2str(CL)])
+disp(['Wing vortex-induced drag coefficient: ',num2str(CDv)])
+disp(' ')
+
+L = 0.5.*rho.*(U.^2).*S.*CL;
+Dv = 0.5.*rho.*(U.^2).*S.*CDv;
+disp(['Lift (N): ',num2str(L)])
+disp(['Vortex-induced drag (N): ',num2str(Dv)])
+disp(' ')
+
+disp('--------------------------------------------------')
+
+% plot results
+s.y = y;
+s.b = b;
+s.Gamma = Gamma;
+s.cl = cl;
+s.clmax_vec = clmax_vec;
+
+plotflag = [1 1 0 0];
+mpeplot(s,plotflag)
 
 end
