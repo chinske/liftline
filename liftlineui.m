@@ -91,6 +91,7 @@ while run_flag_local == 1 && run_flag_global == 1
         run_flag_global = 0;
     elseif strcmpi(choice,'5')
         % spar shear and bending moment
+        run_spareq(selected_aircraft,selected_runcon)
         run_flag_global = 0;
     else
         % invalid input
@@ -406,5 +407,39 @@ elseif stall_ratio > val_no_stall && stall_ratio < val_full_stall
 elseif stall_ratio >= val_full_stall
     stall_state = 3;
 end
+
+end
+
+% --------------------------------------------------
+function run_spareq(selected_aircraft,selected_runcon)
+
+disp('Loading aircraft script...')
+run(selected_aircraft)
+
+disp('Loading run conditions script...')
+run(selected_runcon)
+
+disp('Running case...')
+run_all_mpe
+
+disp('Computing shear and bending moment...')
+[V,M,M_root] = spareq(Gamma,y,rho,U);
+
+disp('--------------------------------------------------')
+disp(' ')
+
+disp(['Root bending moment (N*m): ',num2str(M_root)])
+disp(' ')
+
+disp('--------------------------------------------------')
+
+% plot results
+s.y = y;
+s.b = b;
+s.V = V;
+s.M = M;
+
+plotflag = [0 0 1 1];
+mpeplot(s,plotflag)
 
 end
