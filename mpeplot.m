@@ -35,7 +35,7 @@ function mpeplot(s,plotflag)
 % Circulation : y,b,Gamma
 % Section Lift Coefficient : y,b,cl,clmax_vec
 % Shear Diagram : y,b,V
-% Bending Moment Diagram : y,b,M
+% Bending Moment Diagram : y,b,V,M
 % 
 
 plabel = input('Enter plot label: ','s');
