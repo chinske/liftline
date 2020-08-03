@@ -265,6 +265,7 @@ aoa_i = input('Input initial AoA (deg): ');
 aoa_f = input('Input final AoA (deg):   ');
 d_aoa = input('Input increment (deg):   ');
 
+disp('Iterating over AoA range...')
 % iterate over AoA range
 i = 1;
 for alpha_r = aoa_i:d_aoa:aoa_f
@@ -273,23 +274,137 @@ for alpha_r = aoa_i:d_aoa:aoa_f
     aoa_values(i) = alpha_r;
     CL_values(i) = CL;
     CDv_values(i) = CDv;
+    
+    % compute how much of the wing is stalled
+    stall_ratio(i) = sum(cl > clmax_vec)./length(cl);
+    
     i = i+1;
     
 end
 
+% --------------------------------------------------
+% separate data based on stall ratio
+
+disp('Preparing data to plot...')
+
+% 50 % of the wing is stalled => full stall
+sr_full_stall = 0.5;
+
+% initialize plotdata indices
+plotdata(1).ind = 1;
+plotdata(2).ind = 1;
+plotdata(3).ind = 1;
+
+% check first value
+stall_state = check_stall_state(stall_ratio(1),0,sr_full_stall);
+plotdata(stall_state).CL_values = CL_values(1);
+plotdata(stall_state).CDv_values = CDv_values(1);
+plotdata(stall_state).aoa_values = aoa_values(1);
+plotdata(stall_state).ind = plotdata(stall_state).ind + 1;
+
+% check rest of values
+for i = 2:length(stall_ratio)
+    
+    % check if stall_ratio is different than previous value
+    % if different, carry previous plot forward by one point
+    % this will prevent gaps in the plot
+    if stall_ratio(i) ~= stall_ratio(i-1)
+        stall_state = ...
+            check_stall_state(stall_ratio(i-1),0,sr_full_stall);
+        ind = plotdata(stall_state).ind;
+        
+        plotdata(stall_state).CL_values(ind) = CL_values(i);
+        plotdata(stall_state).CDv_values(ind) = CDv_values(i);
+        plotdata(stall_state).aoa_values(ind) = aoa_values(i);
+        plotdata(stall_state).ind = plotdata(stall_state).ind + 1;
+    end
+    
+    stall_state = ...
+        check_stall_state(stall_ratio(i),0,sr_full_stall);
+    ind = plotdata(stall_state).ind;
+    
+    plotdata(stall_state).CL_values(ind) = CL_values(i);
+    plotdata(stall_state).CDv_values(ind) = CDv_values(i);
+    plotdata(stall_state).aoa_values(ind) = aoa_values(i);
+    plotdata(stall_state).ind = plotdata(stall_state).ind + 1;
+    
+end
+
+% --------------------------------------------------
 % plot results
-figure
-plot(aoa_values,CL_values)
-xlabel('\alpha (deg)')
-ylabel('C_L')
-title('Wing Lift Coefficient')
-grid on
 
 figure
-plot(CDv_values,CL_values)
-xlabel('C_{Dv}')
-ylabel('C_L')
-title('Wing Drag Polar')
-grid on
+for i = 1:length(plotdata)
+    
+    if i == 1
+        lspec = '-k';
+        lwid = 1;
+        dname = 'Normal';
+    elseif i == 2
+        lspec = '-b';
+        lwid = 2;
+        dname = 'Partially Stalled';
+    elseif i == 3
+        lspec = '-r';
+        lwid = 2;
+        dname = 'Fully Stalled';
+    end
+    
+    plot(plotdata(i).aoa_values,plotdata(i).CL_values, ...
+        lspec,'LineWidth',lwid,'DisplayName',dname)
+    hold on
+    xlabel('\alpha (deg)')
+    ylabel('C_L')
+    title('Wing Lift Coefficient')
+    legend show
+    legend('Location','southoutside')
+    grid on
+    grid minor
+    
+end
+
+figure
+for i = 1:length(plotdata)
+    
+    if i == 1
+        lspec = '-k';
+        lwid = 1;
+        dname = 'Normal';
+    elseif i == 2
+        lspec = '-b';
+        lwid = 2;
+        dname = 'Partially Stalled';
+    elseif i == 3
+        lspec = '-r';
+        lwid = 2;
+        dname = 'Fully Stalled';
+    end
+    
+    plot(plotdata(i).CDv_values,plotdata(i).CL_values, ...
+        lspec,'LineWidth',lwid,'DisplayName',dname)
+    hold on
+    xlabel('C_{Dv}')
+    ylabel('C_L')
+    title('Wing Drag Polar')
+    legend show
+    legend('Location','southoutside')
+    grid on
+    grid minor
+    
+end
+
+end
+
+% --------------------------------------------------
+function stall_state = ...
+    check_stall_state(stall_ratio,val_no_stall,val_full_stall)
+
+if stall_ratio == val_no_stall
+    stall_state = 1;
+elseif stall_ratio > val_no_stall && stall_ratio < val_full_stall
+    stall_state = 2;
+elseif stall_ratio >= val_full_stall
+    stall_state = 3;
+end
 
 end
