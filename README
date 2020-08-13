@@ -12,10 +12,11 @@ the wing spar.
 Installation
 ------------
 
-No specific installation procedures are required.  Simply change the
-current working directory within MATLAB to the top-level directory of
-LIFTLINE.  Alternatively, add the top-level directory of LIFTLINE to
-your MATLAB path.
+To install LIFTLINE, add the following directories to your MATLAB
+path.
+
+  liftline
+  liftline/lib (and all subdirectories)
 
 Documentation
 -------------
