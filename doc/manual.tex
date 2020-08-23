@@ -80,6 +80,235 @@ figure below graphically depicts a typical workflow.
 \fbox{\includegraphics[width=\textwidth]{images/flowchart.png}}
 \newline
 \newline
+\section{Definition of Inputs}\label{sec:doi}
+\subsection{Planform Geometry}\label{sec:pg}
+\fbox{\includegraphics[width=\textwidth]{images/planform.png}}
+\paragraph{}
+An M-script in the folder scripts\_aircraft defines the wing geometry.
+The required variables are given in the table below.  N panels compose
+the semi-span.  For each row of clalp, alpzl, and clmax, the inboard
+value applies immediately outboard of the panel's inboard
+breakpoint.\\*\\*
+\begin{tabular}{|l|l|p{2.5in}|c|}
+  % --------------------------------------------------
+  \hline
+  \textbf{Variable Name} &
+  \textbf{Dimension} &
+  \textbf{Description} &
+  \textbf{Units}
+  \\
+  \hline
+  % --------------------------------------------------
+%  var & dim &
+%  description &
+%  unit
+%  \\
+%  \hline
+%  % --------------------------------------------------
+  ybp & 1 x (N+1) &
+  Spanwise coordinates of breakpoints [$0$, $y_1$, $y_2$, ..., $b/2$] &
+  m
+  \\
+  \hline
+  % --------------------------------------------------
+  cbp & 1 x (N+1) &
+  Chord at breakpoints [$c_r$, $c_1$, $c_2$, ..., $c_t$] &
+  m
+  \\
+  \hline
+  % --------------------------------------------------
+  sweepa & 1 x N &
+  Sweep angle (c/4) of each panel &
+  deg
+  \\
+  \hline
+  % --------------------------------------------------
+  twista & 1 x N &
+  Twist angle at tip of each panel &
+  deg
+  \\
+  \hline
+  % --------------------------------------------------
+  clalp & N x 2 &
+  Airfoil section lift-curve slope, $C_{l_\alpha}$.  Each row
+  corresponds to a panel.  Column 1 is the inboard value.  Column 2 is
+  the outboard value. &
+  1/deg
+  \\
+  \hline
+  % --------------------------------------------------
+  alpzl & N x 2 &
+  Airfoil section zero lift angle of attack, $\alpha_{0l}$.  Each row
+  corresponds to a panel.  Column 1 is the inboard value.  Column 2 is
+  the outboard value. &
+  deg
+  \\
+  \hline
+  % --------------------------------------------------
+  clmax & N x 2 &
+  Airfoil section maximum lift coefficient, $C_{l_{max}}$.  Each row
+  corresponds to a panel.  Column 1 is the inboard value.  Column 2 is
+  the outboard value. &
+  -
+  \\
+  \hline
+  % --------------------------------------------------
+  b & Scalar &
+  Span &
+  m
+  \\
+  \hline
+  % --------------------------------------------------
+  S & Scalar &
+  Reference wing area &
+  m\^{}2
+  \\
+  \hline
+  % --------------------------------------------------
+  W & Scalar &
+  Aircraft Weight &
+  N
+  \\
+  \hline
+  % --------------------------------------------------
+\end{tabular}
+\subsection{Structural Loads}\label{sec:sl}
+\paragraph{}
+An M-script in the folder scripts\_aircraft defines structural loads
+(e.g., fuel or stores).  The function SPAREQ (Spar Equilibrium Shear
+and Bending Moment) optionally uses the inputs ploads and uloads, as
+defined below.\\*\\*
+\begin{tabular}{|l|l|p{2.5in}|c|}
+  % --------------------------------------------------
+  \hline
+  \textbf{Variable Name} &
+  \textbf{Dimension} &
+  \textbf{Description} &
+  \textbf{Units}
+  \\
+  \hline
+  % --------------------------------------------------
+  ploads & R x 2 &
+  Point loads applied along the wing.  Each row specifies a point
+  load.  Column 1, y-values (meters).  Column 2, loads.  Negative
+  loads values apply in the downward direction.  For example, a store
+  would be input as a negative load.  Example:
+  $\begin{bmatrix}1.2&-50\\2.1&-25\\\end{bmatrix}$ &
+  N
+  \\
+  \hline
+  % --------------------------------------------------
+  uloads & R x 3 &
+  Uniform distributed loads applied along the wing.  Column 1, inboard
+  y-values (meters).  Column 2, outboard y-values (meters).  Column 3,
+  load per unit span.  Negative loads values apply in the downward
+  direction.  For example, a fuel tank would be input as a negative
+  load.  Example:
+  $\begin{bmatrix}1.1&2.2&-10\\2.0&4.0&-20\\\end{bmatrix}$ &
+  N/m
+  \\
+  \hline
+  % --------------------------------------------------
+\end{tabular}
+\subsection{Case Parameters}\label{sec:cp}
+\paragraph{}
+An M-script in the folder scripts\_cases defines case parameters
+(i.e., run conditions).  Depending on the particular analysis, some of
+these variables may be overridden or not required.\\*\\*
+\begin{tabular}{|l|l|p{2.5in}|c|}
+  % --------------------------------------------------
+  \hline
+  \textbf{Variable Name} &
+  \textbf{Dimension} &
+  \textbf{Description} &
+  \textbf{Units}  
+  \\
+  \hline
+  % --------------------------------------------------
+  alpha\_r & Scalar &
+  Angle of attack (root) &
+  deg
+  \\
+  \hline
+  % --------------------------------------------------
+  ncoef & Scalar &
+  Number of Fourier sine series coefficients &
+  -
+  \\
+  \hline
+  % --------------------------------------------------
+  U & Scalar &
+  Free-stream velocity &
+  m/s
+  \\
+  \hline
+  % --------------------------------------------------
+  rho & Scalar &
+  Density &
+  kg/m\^{}3
+  \\
+  \hline
+  % --------------------------------------------------
+\end{tabular}
+\section{Using LIFTLINEUI}
+\paragraph{}
+The function LIFTLINEUI provides an interactive user interface, which
+aids the user in executing some of the program's functions.  This
+section steps through a typical analysis scenario using the function
+LIFTLINEUI.  This section assumes that you have installed the software
+per the README and your MATLAB path is set to the top-level directory
+of LIFTLINE.
+\begin{enumerate}
+  \item Build a script in the folder scripts\_aircraft that defines
+    the planform geometry as described in section \ref{sec:pg}.  See
+    the folder scripts\_aircraft for example M-files.
+  \item Run the command
+    \texttt{\textbf{drawplan(ybp,cbp,sweepa,twista)}}.  This plots the
+    planform, and you can verify that the planform geometry looks
+    correct.
+  \item Build a script in the folder scripts\_cases that defines the
+    case parameters as described in section \ref{sec:cp}.  See the
+    folder scripts\_cases for example M-files.  Note, you can start
+    with a small ncoef (for example, ncoef = 5) and a nominal angle of
+    attack (for example, alpha\_r = 5).  Appropriate values will be
+    determined as part of this analysis.
+  \item Run the command \texttt{\textbf{liftlineui}}.
+  \item Choose the option to ``Select aircraft script,'' and select
+    the input script that defines the planform geometry.
+  \item Choose the option to ``Select run conditions script,'' and
+    select the input script that defines the case parameters.
+  \item Choose the option to ``Continue.''
+  \item Choose the option to execute a ``Grid Convergence Analysis.''
+  \item Enter the desired accuracy (significant figures) for the lift
+    coefficient.
+  \item Enter the desired accuracy (significant figures) for the
+    vortex-induced drag coefficient.
+  \item The program will output the required ncoef to achieve the
+    desired accuracy.  Update the case parameters script with this
+    value for ncoef.
+  \item Rerun \texttt{\textbf{liftlineui}} using the same procedure,
+    but this time, choose the option to ``Find AoA for L = W.''
+  \item The program will output the required alpha\_r for level
+    flight.  Update the case parameters script with this value for
+    alpha\_r.
+  \item Rerun \texttt{\textbf{liftlineui}} using the same procedure.
+    Choose the option to ``Run Case as Defined in Run Conditions
+    Script.''  This will output the wing lift coefficient and wing
+    vortex-induced drag coefficient for the particular case.  This
+    will also plot the spanwise circulation and spanwise section lift
+    coefficient.
+  \item Rerun \texttt{\textbf{liftlineui}} using the same procedure.
+    Choose the option for ``AoA Range.''  This will plot the wing lift
+    coefficient and wing drag polar over a range of angles of attack.
+  \item Rerun \texttt{\textbf{liftlineui}} using the same procedure.
+    Choose the option for ``Spar Shear and Bending Moment.''  This
+    will plot the spanwise shear and bending moment
+    diagrams.\footnote{Currently, this option in LIFTLINEUI only
+      considers the aerodynamic wing loading and does not use a
+      structural loads script as described in section \ref{sec:sl}.
+      To include structural loads, the user must call the function
+      SPAREQ directly.}
+\end{enumerate}
 \newpage
 \printbibliography
 \end{document}
