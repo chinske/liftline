@@ -309,6 +309,159 @@ of LIFTLINE.
       To include structural loads, the user must call the function
       SPAREQ directly.}
 \end{enumerate}
+\section{Function Reference}
+\subsection{Symmetric Solvers}
+\paragraph{}
+The symmetric solvers (i.e., symmetrical wing loading) use
+inputs/outputs as defined below.  N is the number of Fourier sine
+series coefficients.\\*\\*
+\begin{tabular}{|l|l|p{2.5in}|c|}
+  % --------------------------------------------------
+  \hline
+  \textbf{Variable Name} &
+  \textbf{Dimension} &
+  \textbf{Description} &
+  \textbf{Units}
+  \\
+  \hline
+  % --------------------------------------------------
+  alpha\_r & Scalar &
+  Angle of attack (root) &
+  deg
+  \\
+  \hline
+  % --------------------------------------------------
+  ncoef & Scalar &
+  Number of Fourier sine series coefficients &
+  -
+  \\
+  \hline
+  % --------------------------------------------------
+  theta & 1 x N &
+  Transformed spanwise coordinate &
+  rad
+  \\
+  \hline
+  % --------------------------------------------------
+  y & 1 x N &
+  Spanwise coordinate &
+  m
+  \\
+  \hline
+  % --------------------------------------------------
+  c & 1 x N &
+  Chord &
+  m
+  \\
+  \hline
+  % --------------------------------------------------
+  a0 & 1 x N &
+  Section lift-curve slope &
+  1/rad
+  \\
+  \hline
+  % --------------------------------------------------
+  alpha & 1 x N &
+  Section angle of attack &
+  rad
+  \\
+  \hline
+  % --------------------------------------------------
+  alpha\_zl & 1 x N &
+  Section zero lift angle of attack &
+  rad
+  \\
+  \hline
+  % --------------------------------------------------
+  clmax\_vec & 1 x N &
+  Section maximum lift coefficient &
+  -
+  \\
+  \hline
+  % --------------------------------------------------
+  An & 1 x N &
+  Fourier coefficients [$A_1$, $A_3$, ..., $A_{2N-1}$] &
+  -
+  \\
+  \hline
+  % --------------------------------------------------
+  U & Scalar &
+  Free-stream velocity &
+  m/s
+  \\
+  \hline
+  % --------------------------------------------------
+  Gamma & 1 x N &
+  Circulation &
+  m\^{}2/s
+  \\
+  \hline
+  % --------------------------------------------------
+  CL & Scalar &
+  Wing lift coefficient &
+  -
+  \\
+  \hline
+  % --------------------------------------------------
+  CDv & Scalar &
+  Wing vortex-induced drag coefficient &
+  -
+  \\
+  \hline
+  % --------------------------------------------------
+  cl & 1 x N &
+  Section lift coefficient &
+  -
+  \\
+  \hline
+  % --------------------------------------------------
+  V & 1 X N &
+  Shear &
+  N
+  \\
+  \hline
+  % --------------------------------------------------
+  M & 1 X N &
+  Bending Moment &
+  N*m
+  \\
+  \hline
+  % --------------------------------------------------
+  M\_root & 1 X N &
+  Root Bending Moment &
+  N*m
+  \\
+  \hline
+  % --------------------------------------------------  
+\end{tabular}
+\begin{description}
+  \item[mpegrid] Returns vectors of coordinates and section values at
+    N spanwise locations from $0 \leq y \leq b/2$.
+  \item[$>>$] [theta,y,c,a0,alpha,alpha\_zl,clmax\_vec] = \ldots\\*
+    mpegrid(ybp,cbp,twista,clalp,alpzl,clmax,alpha\_r,ncoef)
+  \item[mpesolve] Solves the monoplane equation for symmetrical
+    loading.
+  \item[$>>$] An = mpesolve(theta,c,a0,alpha,alpha\_zl,b)
+  \item[mperesult] Returns aerodynamic results based on the
+    output of MPESOLVE.
+  \item[$>>$] [Gamma,CL,CDv,cl] = mperesult(An,theta,c,U,b,S)
+  \item[spareq] Returns shear and bending moment for the cantilever
+    wing.  Optional input arguments ploads and uloads specify point
+    loads and uniform distributed loads along the wing, respectively.
+    See section \ref{sec:sl} for more information on defining
+    structural loads.
+  \item[$>>$] [V,M,M\_root] = spareq(Gamma,y,rho,U)
+  \item[$>>$] [V,M,M\_root] = spareq(Gamma,y,rho,U,ploads,uloads)
+\end{description}
+\subsection{Plotting}
+\paragraph{}
+Use the MATLAB help command to display usage instructions for the
+plotting functions (e.g., \texttt{\textbf{help mpeplot}} for help
+using the MPEPLOT function).
+\begin{description}
+\item[drawplan] Plots the planform.
+\item[mpeplot] Utility function to plot results.
+\end{description}
 \newpage
 \printbibliography
 \end{document}
