@@ -251,6 +251,10 @@ s.clmax_vec = clmax_vec;
 plotflag = [1 1 0 0];
 mpeplot(s,plotflag)
 
+% save results
+save(['output_',datestr(datetime('now'),30),'.mat'], ...
+    'y','Gamma','cl','clmax_vec','CL','CDv','L','Dv');
+
 end
 
 % --------------------------------------------------
@@ -441,5 +445,9 @@ s.M = M;
 
 plotflag = [0 0 1 1];
 mpeplot(s,plotflag)
+
+% save results
+save(['output_',datestr(datetime('now'),30),'.mat'], ...
+    'y','V','M','M_root');
 
 end
